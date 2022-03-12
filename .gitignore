@@ -37,3 +37,4 @@ lerna-debug.log*
 # User Define
 note.txt
 .env*
+playground.ts

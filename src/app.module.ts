@@ -6,13 +6,13 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersModule } from './users/users.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env.local',
+      envFilePath: '.env.dev',
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
@@ -22,15 +22,11 @@ import { UsersModule } from './users/users.module';
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
       autoLoadEntities: true,
-      synchronize: false,
+      synchronize: true,
       retryAttempts: 1,
       namingStrategy: new SnakeNamingStrategy(),
-      // migrations: ['dist/migrations/*.js'],
-      // cli: {
-      //   migrationsDir: 'src/migrations',
-      // },
     }),
-    UsersModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
