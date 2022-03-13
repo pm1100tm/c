@@ -14,7 +14,19 @@ export class UserRepository extends Repository<User> {
 
   async selectActiveUserByEmail(email: string): Promise<User> {
     this.logger.log(`selectActiveUserByEmail`);
-    return await this.findOne({ where: { email: email, isActive: true } });
+    let query = null;
+
+    try {
+      query = this.createQueryBuilder('user')
+        .innerJoinAndSelect('user.signUpType', 'signUpType')
+        .select(['user.password', 'signUpType.id'])
+        .where('user.email = :email', { email: email })
+        .andWhere('user.isActive = :isActive', { isActive: true });
+    } catch (e) {
+      throw new Error(e);
+    }
+
+    return await query.getOne();
   }
 
   async insertUser(CreateUserDTO: CreateUserDTO): Promise<void> {
@@ -29,7 +41,7 @@ export class UserRepository extends Repository<User> {
     try {
       await this.save(user);
     } catch (e) {
-      throw new Error('DatbaseError');
+      throw new Error(e);
     }
   }
 }
