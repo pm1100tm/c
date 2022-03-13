@@ -14,7 +14,7 @@ export class UserService {
 
   constructor(
     @InjectRepository(UserRepository)
-    private usersRepository: UserRepository,
+    private userRepository: UserRepository,
   ) {}
 
   /**
@@ -24,7 +24,7 @@ export class UserService {
    */
   async getUserByEmail(email: string): Promise<User> {
     this.logger.log(`getUserByEmail`);
-    return await this.usersRepository.selectUserByEmail(email);
+    return await this.userRepository.selectUserByEmail(email);
   }
 
   /**
@@ -34,7 +34,7 @@ export class UserService {
    */
   async getActiveUserByEmail(email: string): Promise<User> {
     this.logger.log(`getActiveUserByEmail`);
-    return await this.usersRepository.selectActiveUserByEmail(email);
+    return await this.userRepository.selectActiveUserByEmail(email);
   }
 
   /**
@@ -80,12 +80,12 @@ export class UserService {
       createUserDTO.password = null;
     }
 
-    await this.usersRepository.insertUser(createUserDTO);
+    await this.userRepository.insertUser(createUserDTO);
 
-    const responseData: ResponseDataDTO = new ResponseDataDTO();
-    responseData.msg = 'success';
-    responseData.statudCode = HttpStatus.CREATED;
+    const responseDataDTO: ResponseDataDTO = new ResponseDataDTO();
+    responseDataDTO.msg = 'success';
+    responseDataDTO.statudCode = HttpStatus.CREATED;
 
-    return responseData;
+    return responseDataDTO;
   }
 }

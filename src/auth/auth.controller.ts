@@ -11,7 +11,6 @@ export class AuthController {
   @HttpCode(200)
   @Post('signin')
   signIn(@Body() loginUserDTO: LoginUserDTO): Promise<ResponseDataDTO> {
-    this.authService.validateUser(loginUserDTO);
-    return null;
+    return this.authService.validateUser(loginUserDTO);
   }
 }
