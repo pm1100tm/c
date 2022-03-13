@@ -19,7 +19,7 @@ export class UserRepository extends Repository<User> {
     try {
       query = this.createQueryBuilder('user')
         .innerJoinAndSelect('user.signUpType', 'signUpType')
-        .select(['user.password', 'signUpType.id'])
+        .select(['user.id', 'user.email', 'user.password', 'signUpType.id'])
         .where('user.email = :email', { email: email })
         .andWhere('user.isActive = :isActive', { isActive: true });
     } catch (e) {

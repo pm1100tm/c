@@ -7,9 +7,9 @@ import { SignUpType } from './entities/signup-type.entity';
 import { UserRepository } from './repositories/user.repository';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserRepository, Profile, SignUpType])],
   controllers: [UserController],
   providers: [UserService],
   exports: [UserService],
+  imports: [TypeOrmModule.forFeature([UserRepository, Profile, SignUpType])],
 })
 export class UserModule {}
