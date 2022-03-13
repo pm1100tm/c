@@ -14,7 +14,7 @@ export class Profile {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ type: 'blob', nullable: true })
   photo: string;
 
   @Column({ type: 'varchar', length: 30, unique: true })
