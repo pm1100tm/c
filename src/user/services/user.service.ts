@@ -1,9 +1,12 @@
-import { Logger, HttpException, Injectable } from '@nestjs/common';
+import { Logger, Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { MessageConstService } from '../../const/message-const';
 import { UserRepository } from '../repositories/user.repository';
 import { User } from '../entities/user.entity';
-import { CreateUserDTO } from '../dto/create-user.dto';
-import { ResponseUserDTO } from '../dto/response-user.dto';
+import { CreateUserDTO } from '../dto/request/create-user.dto';
+import { SocialSignUpType } from '../../const/enum-const';
+import { ResponseDataDTO } from '../dto/response/response-data.dto';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class UserService {
@@ -14,28 +17,75 @@ export class UserService {
     private usersRepository: UserRepository,
   ) {}
 
-  async getUser(email: string): Promise<User> {
-    this.logger.log(`getUser`);
-    return await this.usersRepository.getUser(email);
+  /**
+   * 이메일로 한 명의 유저 데이터 취득 서비스
+   * @param email
+   * @returns User
+   */
+  async getUserByEmail(email: string): Promise<User> {
+    this.logger.log(`getUserByEmail`);
+    return await this.usersRepository.selectUserByEmail(email);
   }
 
-  async createUser(createUserDTO: CreateUserDTO): Promise<ResponseUserDTO> {
-    this.logger.log(`createUser`);
-    const checkUser = await this.getUser(createUserDTO.email);
+  /**
+   * 이메일로 한 명의 유저 데이터 취득 서비스
+   * @param email
+   * @returns User
+   */
+  async getActiveUserByEmail(email: string): Promise<User> {
+    this.logger.log(`getActiveUserByEmail`);
+    return await this.usersRepository.selectActiveUserByEmail(email);
+  }
+
+  /**
+   * 유저 회원가입 서비스
+   * @param CreateUserDTO
+   * @returns ResponseDataDTO
+   */
+  async createUser(createUserDTO: CreateUserDTO): Promise<ResponseDataDTO> {
+    if (
+      createUserDTO.signUpType === SocialSignUpType.DEFAULT &&
+      !createUserDTO.password
+    ) {
+      throw new HttpException(
+        MessageConstService.ERROR_MSG_REQUIRED_INPUT,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const checkUser: User = await this.getUserByEmail(createUserDTO.email);
 
     if (checkUser) {
       if (!checkUser.isActive) {
-        throw new HttpException('비활성유저', 409);
+        throw new HttpException(
+          MessageConstService.ERROR_MSG_IS_ACTIVE_FALSE,
+          HttpStatus.CONFLICT,
+        );
       }
 
-      throw new HttpException('존재하는 계정', 400);
+      throw new HttpException(
+        MessageConstService.ERROR_MSG_ALREADY_EXIST_USER,
+        HttpStatus.CONFLICT,
+      );
     }
 
-    const user = await this.usersRepository.createUser(createUserDTO);
+    if (createUserDTO.signUpType === SocialSignUpType.DEFAULT) {
+      const salt: string = await bcrypt.genSalt();
+      const hashedPassword: string = await bcrypt.hash(
+        createUserDTO.password,
+        salt,
+      );
+      createUserDTO.password = hashedPassword;
+    } else {
+      createUserDTO.password = null;
+    }
 
-    const responseUser: ResponseUserDTO = new ResponseUserDTO();
-    responseUser.email = user.email;
+    await this.usersRepository.insertUser(createUserDTO);
 
-    return responseUser;
+    const responseData: ResponseDataDTO = new ResponseDataDTO();
+    responseData.msg = 'success';
+    responseData.statudCode = HttpStatus.CREATED;
+
+    return responseData;
   }
 }

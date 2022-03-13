@@ -6,18 +6,18 @@ import {
   UpdateDateColumn,
   OneToOne,
   JoinColumn,
+  ManyToOne,
 } from 'typeorm';
 import { Profile } from './profile.entity';
+import { SignUpType } from './signup-type.entity';
 
 @Entity({
   name: 'user',
-  orderBy: {
-    id: 'DESC',
-  },
+  orderBy: { id: 'DESC' },
 })
 export class User {
   @PrimaryGeneratedColumn()
-  id: number;
+  id?: number;
 
   @Column({ type: 'varchar', length: 30, unique: true })
   email: string;
@@ -25,7 +25,7 @@ export class User {
   @Column({ type: 'varchar', length: 20, nullable: true })
   nickname: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: false })
+  @Column({ type: 'varchar', length: 60, nullable: true })
   password: string;
 
   @Column({ default: true })
@@ -40,4 +40,7 @@ export class User {
   @OneToOne(() => Profile)
   @JoinColumn()
   profile: Profile;
+
+  @ManyToOne(() => SignUpType, (signUpType) => signUpType.users)
+  signUpType: SignUpType;
 }
