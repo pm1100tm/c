@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
-import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+// import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -13,19 +13,19 @@ import { UserModule } from './user/user.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env.dev',
+      envFilePath: '.env',
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: process.env.DATABASE_HOST,
-      port: parseInt(process.env.DATABASE_PORT),
-      username: process.env.DATABASE_USERNAME,
-      password: process.env.DATABASE_PASSWORD,
-      database: process.env.DATABASE_NAME,
+      host: process.env.MYSQL_HOST,
+      port: parseInt(process.env.MYSQL_PORT),
+      username: process.env.MYSQL_USER,
+      password: process.env.MYSQL_PASSWORD,
+      database: process.env.MYSQL_DATABASE,
       autoLoadEntities: true,
       synchronize: true,
       retryAttempts: 1,
-      namingStrategy: new SnakeNamingStrategy(),
+      // namingStrategy: new SnakeNamingStrategy(),
     }),
     UserModule,
     AuthModule,

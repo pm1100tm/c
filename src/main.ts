@@ -10,8 +10,7 @@ async function bootstrap() {
   });
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new HttpExceptionFilter());
-
-  const port = 3000;
+  const port = parseInt(process.env.APP_PORT);
   await app.listen(port);
   logger.log(
     `*****************Application running on port ${port}*****************`,
