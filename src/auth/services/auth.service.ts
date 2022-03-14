@@ -4,10 +4,10 @@ import {
   InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { UserService } from './../user/services/user.service';
+import { UserService } from '../../user/services/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/user/entities/user.entity';
-import { LoginUserDTO } from './login-user.dto';
+import { LoginUserDTO } from '../dto/login-user.dto';
 import { ResponseDataDTO } from 'src/user/dto/response/response-data.dto';
 import { SocialSignUpType } from 'src/const/enum-const';
 import * as bcrypt from 'bcryptjs';

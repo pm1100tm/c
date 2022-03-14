@@ -9,8 +9,8 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { LoginUserDTO } from 'src/auth/login-user.dto';
+import { AuthService } from '../services/auth.service';
+import { LoginUserDTO } from 'src/auth/dto/login-user.dto';
 import { ResponseDataDTO } from 'src/user/dto/response/response-data.dto';
 import { User } from 'src/user/entities/user.entity';
 
