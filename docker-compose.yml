@@ -1,35 +1,41 @@
 version: '3.8'
 
 services:
-  slack_db:
+  database:
     container_name: slack_db
-    image: mysql:5.7
+    image: slack_db:latest
+    platform: linux/x86_64
+    build:
+      context: .
+      cache_from:
+        - slack_db:latest
+      dockerfile: ./database.Dockerfile
     volumes:
       - ./mysql:/var/lib/mysql
     ports:
-      - '3307:3306'
-    restart: always
-    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
-    environment:
-      - MYSQL_ROOT_PASSWORD=1234
-      - MYSQL_DATABASE=slack_rdb_local
-      - MYSQL_USER=swd
-      - MYSQL_PASSWORD=1234
+      - '3308:3306'
 
-  slack_api:
+
+  server:
     container_name: slack_api
-    working_dir: /slack_backend
+    image: slack_api:latest
     build:
       context: .
-      dockerfile: ./Dockerfile
+      cache_from:
+        - slack_api:latest
+      dockerfile: server-dev.Dockerfile
     env_file:
       - .env
-    command: npm run start:dev
-    volumes:
-      - .:/slack_backend
-      - ./npmlog:/root/.npm/_logs
     ports:
-      - '3000:3000'
-    restart: always
+      - '8080:3000'
     depends_on:
-      - slack_db
+      - database
+    command:
+      - bash
+      - -c
+      - |
+        /server/wait-for-it.sh database:3306 -t 10
+        npm run start:dev
+    volumes:
+      - .:/server
+      - ./npmlog:/root/.npm/_logs
