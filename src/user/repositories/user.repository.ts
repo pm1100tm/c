@@ -18,8 +18,7 @@ export class UserRepository extends Repository<User> {
 
     try {
       query = this.createQueryBuilder('user')
-        .innerJoinAndSelect('user.signUpType', 'signUpType')
-        .select(['user.id', 'user.email', 'user.password', 'signUpType.id'])
+        .select(['user.id', 'user.email', 'user.password', 'user.signUpTypeId'])
         .where('user.email = :email', { email: email })
         .andWhere('user.isActive = :isActive', { isActive: true });
     } catch (e) {
@@ -31,11 +30,11 @@ export class UserRepository extends Repository<User> {
 
   async insertUser(CreateUserDTO: CreateUserDTO): Promise<void> {
     this.logger.log(`insertUser`);
-    const { email, password, signUpType } = CreateUserDTO;
+    const { email, password, signUpTypeId } = CreateUserDTO;
     const user = this.create({
       email,
       password,
-      signUpType: { id: signUpType },
+      signUpTypeId
     });
 
     try {

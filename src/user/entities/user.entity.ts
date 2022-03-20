@@ -4,12 +4,7 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToOne,
-  JoinColumn,
-  ManyToOne,
 } from 'typeorm';
-import { Profile } from './profile.entity';
-import { SignUpType } from './signup-type.entity';
 
 @Entity({
   name: 'user',
@@ -17,7 +12,7 @@ import { SignUpType } from './signup-type.entity';
 })
 export class User {
   @PrimaryGeneratedColumn()
-  id?: number;
+  id: number;
 
   @Column({ type: 'varchar', length: 30, unique: true })
   email: string;
@@ -31,16 +26,13 @@ export class User {
   @Column({ default: true })
   isActive: boolean;
 
+  // pk of sign_up_type table
+  @Column({ type: 'tinyint', unsigned: true })
+  signUpTypeId: number
+
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
-
-  @OneToOne(() => Profile)
-  @JoinColumn()
-  profile: Profile;
-
-  @ManyToOne(() => SignUpType, (signUpType) => signUpType.users)
-  signUpType: SignUpType;
 }

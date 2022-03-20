@@ -3,16 +3,14 @@ import {
   PrimaryColumn,
   Column,
   CreateDateColumn,
-  OneToMany,
 } from 'typeorm';
-import { User } from './user.entity';
 
 @Entity({
   name: 'sign_up_type',
-  orderBy: { id: 'DESC' },
+  orderBy: { id: 'ASC' },
 })
 export class SignUpType {
-  @PrimaryColumn({ type: 'tinyint' })
+  @PrimaryColumn({ type: 'tinyint', unsigned: true })
   id: number;
 
   @Column({ type: 'varchar', length: 8 })
@@ -20,7 +18,4 @@ export class SignUpType {
 
   @CreateDateColumn()
   createdAt: Date;
-
-  @OneToMany(() => User, (user) => user.signUpType)
-  users: User[];
 }

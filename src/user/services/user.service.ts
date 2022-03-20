@@ -44,7 +44,7 @@ export class UserService {
    */
   async createUser(createUserDTO: CreateUserDTO): Promise<ResponseDataDTO> {
     if (
-      createUserDTO.signUpType === SocialSignUpType.DEFAULT &&
+      createUserDTO.signUpTypeId === SocialSignUpType.DEFAULT &&
       !createUserDTO.password
     ) {
       throw new HttpException(
@@ -53,10 +53,10 @@ export class UserService {
       );
     }
 
-    const checkUser: User = await this.getUserByEmail(createUserDTO.email);
+    const user: User = await this.getUserByEmail(createUserDTO.email);
 
-    if (checkUser) {
-      if (!checkUser.isActive) {
+    if (user) {
+      if (!user.isActive) {
         throw new HttpException(
           MessageConstService.ERROR_MSG_IS_ACTIVE_FALSE,
           HttpStatus.CONFLICT,
@@ -69,7 +69,7 @@ export class UserService {
       );
     }
 
-    if (createUserDTO.signUpType === SocialSignUpType.DEFAULT) {
+    if (createUserDTO.signUpTypeId === SocialSignUpType.DEFAULT) {
       const salt: string = await bcrypt.genSalt();
       const hashedPassword: string = await bcrypt.hash(
         createUserDTO.password,
@@ -83,7 +83,7 @@ export class UserService {
     await this.userRepository.insertUser(createUserDTO);
 
     const responseDataDTO: ResponseDataDTO = new ResponseDataDTO();
-    responseDataDTO.msg = 'success';
+    responseDataDTO.msg = MessageConstService.SUCCESS_MSG
     responseDataDTO.statudCode = HttpStatus.CREATED;
 
     return responseDataDTO;
