@@ -22,6 +22,7 @@ export class AuthController {
   @HttpCode(200)
   @Post('signin')
   signIn(@Body() loginUserDTO: LoginUserDTO): Promise<ResponseDataDTO> {
+    this.logger.log(`signIn::${loginUserDTO.email}`);
     return this.authService.login(loginUserDTO);
   }
 
@@ -30,8 +31,8 @@ export class AuthController {
   @UseGuards(AuthGuard())
   authTest(@Req() req) {
     const user: User = req.user;
-    // console.log(user.id);
-    // console.log(user.email);
-    // console.log(user.signUpType.id);
+    console.log(user.id);
+    console.log(user.email);
+    console.log(user.signUpTypeId);
   }
 }

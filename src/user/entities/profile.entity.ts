@@ -29,6 +29,10 @@ export class Profile {
   @Column({ type: 'tinyint', unsigned: true })
   timezone: number;
 
+  // pk of user table
+  @Column({type: 'int'})
+  userId: number;
+
   @CreateDateColumn()
   createdAt: Date;
 

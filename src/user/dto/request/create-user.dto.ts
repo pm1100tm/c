@@ -17,5 +17,5 @@ export class CreateUserDTO {
 
   @IsNotEmpty()
   @IsInt()
-  signUpType: number;
+  signUpTypeId: number;
 }

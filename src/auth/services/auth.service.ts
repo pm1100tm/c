@@ -1,8 +1,7 @@
 import {
+  HttpException,
   HttpStatus,
   Injectable,
-  InternalServerErrorException,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { UserService } from '../../user/services/user.service';
 import { JwtService } from '@nestjs/jwt';
@@ -11,6 +10,7 @@ import { LoginUserDTO } from '../dto/login-user.dto';
 import { ResponseDataDTO } from 'src/user/dto/response/response-data.dto';
 import { SocialSignUpType } from 'src/const/enum-const';
 import * as bcrypt from 'bcryptjs';
+import { MessageConstService } from 'src/const/message-const';
 
 @Injectable()
 export class AuthService {
@@ -21,22 +21,35 @@ export class AuthService {
 
   async login(loginUserDTO: LoginUserDTO): Promise<any> {
     const { email, password } = loginUserDTO;
-    const user: User = await this.userService.getActiveUserByEmail(email);
+    const user: User = await this.userService.getUserByEmail(email);
 
     if (!user) {
-      throw new UnauthorizedException('No User Data');
+      throw new HttpException(
+        MessageConstService.ERROR_MSG_NO_USER_DATA,
+        HttpStatus.NOT_FOUND,
+      );
     }
 
-    if (user.signUpType.id === SocialSignUpType.DEFAULT) {
+    if (!user.isActive) {
+      throw new HttpException(
+        MessageConstService.ERROR_MSG_IS_ACTIVE_FALSE,
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    if (user.signUpTypeId === SocialSignUpType.DEFAULT) {
       if (!(await bcrypt.compare(password, user.password))) {
-        throw new UnauthorizedException('Plaese check your id or password');
+        throw new HttpException(
+          MessageConstService.ERROR_MSG_WRONG_USER_INFO,
+          HttpStatus.UNAUTHORIZED,
+        );
       }
     }
 
     const accessToken = await this.generateToken(email);
 
     const responseDataDTO = new ResponseDataDTO();
-    responseDataDTO.msg = 'success';
+    responseDataDTO.msg = MessageConstService.SUCCESS_MSG
     responseDataDTO.statudCode = HttpStatus.OK;
     responseDataDTO.data = { accessToken: accessToken };
 
@@ -51,7 +64,10 @@ export class AuthService {
       return this.jwtService.sign(payload);
     } catch (e) {
       console.log(e);
-      throw new InternalServerErrorException('엑세스 토큰 못 만들었음');
+      throw new HttpException(
+        MessageConstService.ERROR_MSG_INTERNAL_SERVER_ERROR,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 }
