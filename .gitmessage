@@ -1,0 +1,59 @@
+
+
+######## Git message convention ###########
+# EX)
+# Fix: calculation in process.uptime()
+# Fix: build warning in node_report.cc
+# Fix: error condition in Verify::VerifyFinal
+
+# Convention
+# Fix       : 올바르지 않은 동작 수정
+# Add       : 코드나 테스트, 예제, 문서
+# Remove    : 코드의 삭제. ‘unnecessary’, ‘useless’, ‘unneeded’, ‘unused’, ‘duplicated’ 와 섞어서
+# Use       : 특별히 무언가를 사용해 구현을 하는 경우
+# Refactor  : 코드의 전면 수정
+# Simplify  : 복잡한 코드 단순화
+# Update    : 개정, 버전 업데이트 (잘 동작하는 것에 수정, 추가 보완의 개념)
+# Improve   : 향상이 있는 경우 (성능, 검증, 접근성)
+# Implement : 코드 추가의 정보보다 구현체를 완성했을 때
+# Revise    : 문서의 개정
+# Ensure    : 무엇인가를 확실히 보장받는 경우
+# Prevent   : 특정한 처리를 못하게 막음
+# Avoid     : 특정한 처리를 회피 (If 구문으로 동작을 제외 등..)
+# Move      : 파일, 코드의 이동
+# Correct   : 문법의 오류, 타입의 변경, 이름 변경
+# Rename    : 이름 변경
+# Allow     : 허용의 표현
+# Verify    : 검증 코드를 넣을 때
+# Set       : 변수 값을 변경하는 등의 수정
+# Pass      : 파라미터를 넘길 때
+
+# -Add A, Add A for B, Add A to B
+# -Remove A, Remove A from B
+# -Use A for B, Use A in B, Use A instead of B
+# -Refactor A
+# -Simplify A
+# -Update A to B
+# -Improve A
+# -Make A B
+# -Implement A, Implement A to B
+# -Revise A
+# -Correct A
+# -Ensure A
+# -Prevent A, Prevent A from B
+# -Avoid A, Avoid A if B, Avoid A when B
+# -Move A to B, Move A into B
+# -Rename A to B
+# -Allow A to B
+# -Verify A
+# -Set A to B
+# -Pass A to B
+
+# ------------------
+# Capitalize the subject line
+# Use imperitive mood in subject
+# Do not use period at the end of subject
+# Seperate subject and content with a blank line
+# Use the body explain "what" and "why" vs "how"
+# Use "-" when content contains multiline
+# ------------------
