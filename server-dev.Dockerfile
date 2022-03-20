@@ -1,15 +1,15 @@
 FROM node:16-alpine3.11
 
-RUN apk add bash
+RUN apk update && apk add bash sudo vim
 
 WORKDIR /server
 
-# COPY package.json ./
 COPY package*.json ./
 
 RUN npm install
 
 COPY . .
 
-RUN chmod +x wait-for-it.sh
+RUN ["chmod", "+x", "/server/wait-for-it.sh"]
+
 EXPOSE 3000
