@@ -7,7 +7,6 @@ import {
 
 @Entity({
   name: 'sign_up_type',
-  orderBy: { id: 'ASC' },
 })
 export class SignUpType {
   @PrimaryColumn({ type: 'tinyint', unsigned: true })
