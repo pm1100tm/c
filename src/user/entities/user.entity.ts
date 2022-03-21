@@ -11,51 +11,55 @@ import { SignUpType } from './signup-type.entity';
 
 @Entity({
   name: 'user',
-  orderBy: { id: 'DESC' },
 })
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', length: 30, unique: true })
+  @Column({ type: 'varchar', unique: true })
   email: string;
 
-  @Column({ type: 'varchar', length: 60, nullable: true })
-  password: string;
+  @Column({
+    type: 'varchar',
+    unique: true,
+    name: 'social_unique_id',
+  })
+  socialUniqueId: string;
 
-  @Column({ type: 'varchar', length: 30, unique: true })
+  @Column({ type: 'varchar' })
   name: string;
 
-  @Column({ type: 'varchar', length: 30, nullable: true })
+  @Column({ type: 'varchar', nullable: true, name: 'display_name' })
   displayName: string;
 
-  @Column({ type: 'varchar', length: 20, nullable: true })
+  @Column({ type: 'varchar', nullable: true })
   phone: string;
 
   @Column({ type: 'tinyint', unsigned: true })
   timezone: number;
 
-  @Column({ type: 'blob', nullable: true })
+  @Column({ type: 'varchar', nullable: true, name: 'thumbnail_url_large' })
   thumbnailUrlLarge: string;
-  
-  @Column({ type: 'blob', nullable: true })
+
+  @Column({ type: 'varchar', nullable: true, name: 'thumbnail_url_medium' })
   thumbnailUrlMedium: string;
-  
-  @Column({ type: 'blob', nullable: true })
+
+  @Column({ type: 'varchar', nullable: true, name: 'thumbnail_url_small' })
   thumbnailUrlSmall: string;
 
-  @Column({ default: true })
+  @Column({ type: 'tinyint', default: true, name: 'is_active' })
   isActive: boolean;
+
+  @CreateDateColumn({ type: 'datetime', name: 'created_at' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'datetime', name: 'updated_at' })
+  updatedAt: Date;
 
   @ManyToOne(() => SignUpType, (signUpType) => signUpType.users)
   @JoinColumn({ name: 'signUpTypeId' })
-  signUpType: SignUpType
-  @Column()
-  signUpTypeId: number
+  signUpType: SignUpType;
 
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
+  @Column({ name: 'sign_up_type_id' })
+  signUpTypeId: number;
 }

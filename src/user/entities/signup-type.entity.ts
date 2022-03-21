@@ -11,15 +11,15 @@ import { User } from './user.entity';
   name: 'sign_up_type',
 })
 export class SignUpType {
-  @PrimaryColumn({ type: 'tinyint'})
+  @PrimaryColumn({ type: 'tinyint' })
   id: number;
 
   @Column({ type: 'varchar', length: 8 })
   name: string;
 
   @OneToMany(() => User, (user) => user.signUpType)
-  users: User[]
+  users: User[];
 
-  @CreateDateColumn()
+  @CreateDateColumn({ type: 'datetime', name: 'created_at' })
   createdAt: Date;
 }
