@@ -23,8 +23,9 @@ import { UserModule } from './user/user.module';
       password: process.env.MYSQL_PASSWORD,
       database: process.env.MYSQL_DATABASE,
       autoLoadEntities: true,
-      synchronize: true,
+      synchronize: false,
       retryAttempts: 1,
+      logging: true
       // namingStrategy: new SnakeNamingStrategy(),
     }),
     UserModule,

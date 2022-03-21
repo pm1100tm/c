@@ -1,7 +1,8 @@
-import { Controller, Logger, Post, Body, HttpCode } from '@nestjs/common';
+import { Controller, Logger, Post, Body, HttpCode, Get } from '@nestjs/common';
 import { UserService } from './../../user/services/user.service';
 import { CreateUserDTO } from '../dto/request/create-user.dto';
 import { ResponseDataDTO } from '../dto/response/response-data.dto';
+import { createQueryBuilder } from 'typeorm';
 
 @Controller('users')
 export class UserController {
@@ -13,5 +14,11 @@ export class UserController {
   createUser(@Body() createUserDto: CreateUserDTO): Promise<ResponseDataDTO> {
     this.logger.log(`createUser::${JSON.stringify(createUserDto)}`);
     return this.userService.createUser(createUserDto);
+  }
+
+  @HttpCode(201)
+  @Get('test')
+  test() {
+    return this.userService.test()
   }
 }

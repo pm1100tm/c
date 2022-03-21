@@ -6,6 +6,7 @@ import { User } from '../entities/user.entity';
 import { CreateUserDTO } from '../dto/request/create-user.dto';
 import { SocialSignUpType } from '../../const/enum-const';
 import { ResponseDataDTO } from '../dto/response/response-data.dto';
+import { createQueryBuilder } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 
 @Injectable()
@@ -87,5 +88,9 @@ export class UserService {
     responseDataDTO.statudCode = HttpStatus.CREATED;
 
     return responseDataDTO;
+  }
+
+  async test(){
+    return this.userRepository.createQueryBuilder('user').innerJoin('user.signUpTypeId', 'sign_up_type').getMany()
   }
 }
