@@ -1,8 +1,4 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UserService } from '../../user/services/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/user/entities/user.entity';
@@ -20,7 +16,7 @@ export class AuthService {
   ) {}
 
   async login(loginUserDTO: LoginUserDTO): Promise<any> {
-    const { email, password } = loginUserDTO;
+    const { email } = loginUserDTO;
     const user: User = await this.userService.getUserByEmail(email);
 
     if (!user) {
@@ -37,19 +33,10 @@ export class AuthService {
       );
     }
 
-    if (user.signUpTypeId === SocialSignUpType.DEFAULT) {
-      if (!(await bcrypt.compare(password, user.password))) {
-        throw new HttpException(
-          MessageConstService.ERROR_MSG_WRONG_USER_INFO,
-          HttpStatus.UNAUTHORIZED,
-        );
-      }
-    }
-
     const accessToken = await this.generateToken(email);
 
     const responseDataDTO = new ResponseDataDTO();
-    responseDataDTO.msg = MessageConstService.SUCCESS_MSG
+    responseDataDTO.msg = MessageConstService.SUCCESS_MSG;
     responseDataDTO.statudCode = HttpStatus.OK;
     responseDataDTO.data = { accessToken: accessToken };
 

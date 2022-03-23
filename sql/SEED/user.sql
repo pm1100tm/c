@@ -1,0 +1,16 @@
+INSERT INTO user (email, social_unique_id, name, timezone, sign_up_type_id)
+VALUES ('switch1@gmail.com',
+        'google_token1',
+        '원두찡',
+        1,
+        1),
+       ('switch2@gmail.com',
+        'google_token2',
+        '준',
+        1,
+        1),
+       ('switch3@gmail.com',
+        'google_token3',
+        '이직하즈아',
+        1,
+        1)

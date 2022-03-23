@@ -11,10 +11,6 @@ export class CreateUserDTO {
   @IsEmail()
   email: string;
 
-  @IsOptional()
-  @IsString()
-  password: string | null;
-
   @IsNotEmpty()
   @IsInt()
   signUpTypeId: number;
