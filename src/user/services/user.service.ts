@@ -6,7 +6,6 @@ import { User } from '../entities/user.entity';
 import { CreateUserDTO } from '../dto/request/create-user.dto';
 import { SocialSignUpType } from '../../const/enum-const';
 import { ResponseDataDTO } from '../dto/response/response-data.dto';
-import { createQueryBuilder } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 
 @Injectable()
@@ -44,10 +43,7 @@ export class UserService {
    * @returns ResponseDataDTO
    */
   async createUser(createUserDTO: CreateUserDTO): Promise<ResponseDataDTO> {
-    if (
-      createUserDTO.signUpTypeId === SocialSignUpType.DEFAULT &&
-      !createUserDTO.password
-    ) {
+    if (createUserDTO.signUpTypeId === SocialSignUpType.DEFAULT) {
       throw new HttpException(
         MessageConstService.ERROR_MSG_REQUIRED_INPUT,
         HttpStatus.BAD_REQUEST,
@@ -70,27 +66,19 @@ export class UserService {
       );
     }
 
-    if (createUserDTO.signUpTypeId === SocialSignUpType.DEFAULT) {
-      const salt: string = await bcrypt.genSalt();
-      const hashedPassword: string = await bcrypt.hash(
-        createUserDTO.password,
-        salt,
-      );
-      createUserDTO.password = hashedPassword;
-    } else {
-      createUserDTO.password = null;
-    }
-
     await this.userRepository.insertUser(createUserDTO);
 
     const responseDataDTO: ResponseDataDTO = new ResponseDataDTO();
-    responseDataDTO.msg = MessageConstService.SUCCESS_MSG
+    responseDataDTO.msg = MessageConstService.SUCCESS_MSG;
     responseDataDTO.statudCode = HttpStatus.CREATED;
 
     return responseDataDTO;
   }
 
-  async test(){
-    return this.userRepository.createQueryBuilder('user').innerJoin('user.signUpTypeId', 'sign_up_type').getMany()
+  async test() {
+    return this.userRepository
+      .createQueryBuilder('user')
+      .innerJoin('user.signUpTypeId', 'sign_up_type')
+      .getMany();
   }
 }

@@ -25,7 +25,7 @@ import { UserModule } from './user/user.module';
       autoLoadEntities: true,
       synchronize: false,
       retryAttempts: 1,
-      logging: true
+      logging: true,
       // namingStrategy: new SnakeNamingStrategy(),
     }),
     UserModule,

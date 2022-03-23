@@ -11,8 +11,4 @@ export class LoginUserDTO {
   @MaxLength(30)
   @IsEmail()
   email: string;
-
-  @IsOptional()
-  @IsString()
-  password: string | null;
 }
